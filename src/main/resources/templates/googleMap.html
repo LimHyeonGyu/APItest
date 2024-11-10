@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Google Places API Example</title>
+</head>
+<body>
+    <input id="searchBox" type="text" placeholder="Search for places" style="width: 300px;">
+    <button onclick="searchPlaces()">Search</button>
+    <div id="map" style="height: 500px; width: 100%; margin-top: 10px;"></div>
+    <div id="details" style="margin-top: 20px;"></div>
+
+<!-- Google Maps 및 Places API 로드 -->
+    <script th:src="@{'https://maps.googleapis.com/maps/api/js?key=' + ${apiKey} + '&libraries=places&callback=initMap'}" async defer></script>
+
+
+<script>
+    let map;
+    let service;
+    let infowindow;
+
+    function initMap() {
+        const initialLocation = { lat: 37.5665, lng: 126.9780 }; // 서울의 좌표
+        map = new google.maps.Map(document.getElementById("map"), {
+            center: initialLocation,
+            zoom: 12,
+        });
+
+        service = new google.maps.places.PlacesService(map);
+        infowindow = new google.maps.InfoWindow();
+    }
+
+    function searchPlaces() {
+        const query = document.getElementById("searchBox").value;
+
+        if (!query) {
+            alert("Please enter a place to search.");
+            return;
+        }
+
+        const request = {
+            query: query,
+            location: map.getCenter(),
+            radius: 5000 // 5km 반경 내에서 검색
+        };
+
+        service.textSearch(request, (results, status) => {
+            if (status === google.maps.places.PlacesServiceStatus.OK) {
+                results.forEach(place => {
+                    createMarker(place);
+                });
+            } else {
+                alert("No results found.");
+            }
+        });
+    }
+
+    function createMarker(place) {
+        const marker = new google.maps.Marker({
+            map: map,
+            position: place.geometry.location,
+            title: place.name,
+        });
+
+        marker.addListener("click", () => {
+            infowindow.setContent(place.name);
+            infowindow.open(map, marker);
+            getPlaceDetails(place.place_id);
+        });
+    }
+
+    function getPlaceDetails(placeId) {
+        service.getDetails({ placeId: placeId }, (place, status) => {
+            if (status === google.maps.places.PlacesServiceStatus.OK) {
+                displayPlaceDetails(place);
+            } else {
+                alert("Failed to get place details.");
+            }
+        });
+    }
+
+    function displayPlaceDetails(place) {
+        const detailsDiv = document.getElementById("details");
+        detailsDiv.innerHTML = `
+                <h2>${place.name}</h2>
+                <p><strong>Address:</strong> ${place.formatted_address}</p>
+                <p><strong>Phone Number:</strong> ${place.formatted_phone_number || "N/A"}</p>
+                <p><strong>Rating:</strong> ${place.rating || "N/A"}</p>
+                <h3>Photos</h3>
+                <div id="photos"></div>
+                <h3>Reviews</h3>
+                <div id="reviews"></div>
+            `;
+
+        // Display photos
+        const photosDiv = document.getElementById("photos");
+        if (place.photos) {
+            place.photos.forEach(photo => {
+                const img = document.createElement("img");
+                img.src = photo.getUrl({ maxWidth: 100, maxHeight: 100 });
+                img.style.margin = "5px";
+                photosDiv.appendChild(img);
+            });
+        } else {
+            photosDiv.innerHTML = "<p>No photos available</p>";
+        }
+
+        // Display reviews
+        const reviewsDiv = document.getElementById("reviews");
+        if (place.reviews) {
+            place.reviews.forEach(review => {
+                const reviewDiv = document.createElement("div");
+                reviewDiv.style.marginBottom = "10px";
+                reviewDiv.innerHTML = `
+                        <p><strong>${review.author_name}</strong> (${review.rating}★)</p>
+                        <p>${review.text}</p>
+                    `;
+                reviewsDiv.appendChild(reviewDiv);
+            });
+        } else {
+            reviewsDiv.innerHTML = "<p>No reviews available</p>";
+        }
+    }
+</script>
+</body>
+</html>

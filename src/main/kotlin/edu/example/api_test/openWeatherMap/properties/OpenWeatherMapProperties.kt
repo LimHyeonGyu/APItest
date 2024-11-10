@@ -1,4 +1,4 @@
-package edu.example.api_test.OpenWeatherMap.properties
+package edu.example.api_test.openWeatherMap.properties
 
 import org.springframework.boot.context.properties.ConfigurationProperties
 import org.springframework.stereotype.Component
