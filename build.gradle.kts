@@ -34,6 +34,11 @@ dependencies {
 
     implementation("org.springframework.boot:spring-boot-starter-webflux")
     implementation("org.springframework.boot:spring-boot-starter-thymeleaf")
+    runtimeOnly("com.h2database:h2")
+    implementation("com.squareup.okhttp3:okhttp:4.9.3")
+    implementation("com.google.code.gson:gson:2.8.9")
+    implementation("com.google.maps:google-maps-services:0.19.0")
+
 }
 
 kotlin {
