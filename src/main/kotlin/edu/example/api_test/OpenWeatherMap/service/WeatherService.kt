@@ -1,6 +1,6 @@
 package edu.example.api_test.OpenWeatherMap.service
 
-import edu.example.api_test.OpenWeatherMap.properites.OpenWeatherMapProperties
+import edu.example.api_test.OpenWeatherMap.properties.OpenWeatherMapProperties
 import org.springframework.stereotype.Service
 import org.springframework.web.reactive.function.client.WebClient
 
