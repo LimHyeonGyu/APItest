@@ -1,0 +1,25 @@
+// OpenWeather API 로 얻을 수 있는 정보 예시 입니다.
+// api 경로 예시: http://api.openweathermap.org/data/2.5/weather?q={city}&appid={apikey}&lang={lang}&units=metric
+// city = 도시, apikey = 발급키, lang = 언어
+{
+  "cord": { "lon": 126.9778, "lat": 37.5683 },
+  "weather": [{"id": 800, "main": "Clear", "description": "맑음", "icon": "01n"}], // 날씨
+  "base": "stations",
+  "main": {
+    "temp": -3.38,  // 현제 온도
+    "feels_like": -3.38,  // 체감온도
+    "temp_min": -4.34,  // 최저기온
+    "temp_max": -3.22,  // 최고기온
+    "pressure": 1030, //기압
+    "humidity": 65  // 습도
+  },
+  "visibility": 10000,
+  "wind": { "speed": 0.51, "deg": 170 }, // 풍향, 풍속
+  "clouds": { "all": 0 },
+  "dt": 1672918169,
+  "sys": { "type": 1, "id": 8105, "country": "KR", "sunrise": 1672872432, "sunset": 1672907203},
+  "timezone": 32400,
+  "id": 1835848,
+  "name": "Seoul", // 지역
+  "cod": 200
+}
